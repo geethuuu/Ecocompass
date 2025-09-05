@@ -4,9 +4,39 @@ import AnalysisESGRankCard from "../components/AnalysisESGRankCard";
 import AnalysisESGScoreCard from "../components/AnalysisESGScoreCard";
 import Headerfileupload from "../components/Headerfileupload";
 import SuggestionsCard from "../components/SuggestionsCard";
+import FuturePredictionCard from "../components/FuturePredictionCard"; // Import the form component
+import goldBadge from "../assets/badges/gold.jpg";
+import silverBadge from "../assets/badges/silver.jpg";
+import bronzeBadge from "../assets/badges/bronze.jpg"
+const badgeNames = {
+  gold: "Sustainability Champion",
+  silver: " Eco Warrior",
+  bronze: " Green Enthusiast"
+};
 
 const Analysis = () => {
+  const [esgScore, setEsgScore] = React.useState(null);
   const [activeTab, setActiveTab] = React.useState("analysis");
+  const getBadge = (score) => {
+    if (score >= 80) return{ image:goldBadge,name:badgeNames.gold};
+    if (score >= 60) return { image:silverBadge,name:badgeNames.silver};
+    return {image: bronzeBadge,name:badgeNames.bronze};
+  };
+   // Fetch latest ESG Score from API
+   React.useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/latest-esg/")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data && typeof data.esg_score === "number") {
+          setEsgScore(data.esg_score);
+        } else {
+          console.error("Invalid ESG score data:", data);
+        }
+      })
+      .catch((error) => console.error("Error fetching ESG score:", error));
+  }, []);
+
+
 
   const renderContent = () => {
     switch (activeTab) {
@@ -26,19 +56,20 @@ const Analysis = () => {
             </div>
           </div>
         );
-      case "badges":
-        return <div className="content-wrapper">Badges content goes here...</div>;
-      case "future":
+          case "future":
         return (
-        
-            <div className="content-wrapper">
-              <div className="flex gap-4 max-md:flex-col">
-  
-              </div>
-              <div className="py-4 px-6 mt-4 bg-white shadow-sm max-md:px-4 max-md:w-full">
-                <SuggestionsCard />
-              </div>
+          <div className="content-wrapper">
+            <div className="py-4 px-6 mt-4 bg-white shadow-sm max-md:px-4 max-md:w-full">
+              <SuggestionsCard />
             </div>
+          </div>
+        );
+  
+      case "future-revenue":
+        return (
+          <div className="content-wrapper flex justify-center">
+            <FuturePredictionCard />
+          </div>
         );
       default:
         return null;
@@ -59,13 +90,19 @@ const Analysis = () => {
           className={`mr-4 ${activeTab === "badges" ? "underline" : ""}`}
           onClick={() => setActiveTab("badges")}
         >
-          Badges
+        
         </button>
         <button
-          className={`${activeTab === "future" ? "underline" : ""}`}
+          className={`mr-4 ${activeTab === "future" ? "underline" : ""}`}
           onClick={() => setActiveTab("future")}
         >
-          Future Predictions
+          Suggestions
+        </button>
+        <button
+          className={`${activeTab === "future-revenue" ? "underline" : ""}`}
+          onClick={() => setActiveTab("future-revenue")}
+        >
+          Future Revenue
         </button>
       </div>
       <div className="shrink-0 mt-4 max-w-full border border-black border-solid h-[3px] w-full" />

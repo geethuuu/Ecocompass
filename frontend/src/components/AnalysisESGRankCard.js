@@ -1,32 +1,57 @@
 import * as React from "react";
+import goldBadge from "../assets/badges/gold.jpg";
+import silverBadge from "../assets/badges/silver.jpg";
+import bronzeBadge from "../assets/badges/bronze.jpg";
 
-const AnalysisESGRankCard = () => {
+const badgeNames = {
+  gold: "Sustainability Champion",
+  silver: "Eco Warrior",
+  bronze: "Green Enthusiast",
+};
+
+const getBadge = (score) => {
+  if (score >= 80) return { image: goldBadge, name: badgeNames.gold };
+  if (score >= 60) return { image: silverBadge, name: badgeNames.silver };
+  return { image: bronzeBadge, name: badgeNames.bronze };
+};
+
+const Analysis = () => {
+  const [esgScore, setEsgScore] = React.useState(null);
+  const [activeTab, setActiveTab] = React.useState("analysis");
+
+  // Fetch latest ESG Score from API
+  React.useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/latest-esg/")
+      .then((response) => response.json())
+      .then((data) => {
+        if (data && typeof data.esg_score === "number") {
+          setEsgScore(data.esg_score);
+        } else {
+          console.error("Invalid ESG score data:", data);
+        }
+      })
+      .catch((error) => console.error("Error fetching ESG score:", error));
+  }, []);
+
   return (
-    <div className="flex flex-col pt-3.5 pb-7 mx-auto w-full bg-white shadow-[9px_9px_4px_rgba(0,0,0,0.25)] max-md:mt-10 max-md:max-w-full">
-      <div className="self-center max-w-full w-[591px]">
-        <div className="flex gap-5 max-md:flex-col">
-          <div className="flex flex-col w-[33%] max-md:ml-0 max-md:w-full">
-            <img
-              loading="lazy"
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/df8402a1ce353ce899b66fb738d2353953f4047931cf2391a6855b57f06ac10f?placeholderIfAbsent=true&apiKey=09325b95264143aebd92e4c7eabcc1bf"
-              alt="ESG Rank Chart"
-              className="object-contain grow shrink-0 max-w-full aspect-[1.09] w-[175px] max-md:mt-10"
-            />
-          </div>
-          <div className="flex flex-col ml-5 w-[67%] max-md:ml-0 max-md:w-full">
-            <div className="self-stretch my-auto text-2xl text-black max-md:mt-10">
-              ESG Ranking (%) Compared with 30482 Companies
-            </div>
-          </div>
+    <div className="content-wrapper flex flex-col items-center">
+      <h2 className="text-xl font-semibold mb-4">Your ESG Badge</h2>
+      {esgScore !== null ? (
+        <div className="flex flex-col items-center">
+          <img
+            src={getBadge(esgScore).image}
+            alt="ESG Badge"
+            className="w-40 h-40"
+            
+          />
+          <p className="mt-2 text-lg font-semibold">{getBadge(esgScore).name}</p>
+          <p className="mt-2 text-lg font-semibold">ESG Score: {esgScore}</p>
         </div>
-      </div>
-      <img
-        loading="lazy"
-        src="https://cdn.builder.io/api/v1/image/assets/TEMP/fa95439fd388432b3c36157b94081d5740b7669f773e924a78b8a2d662856548?placeholderIfAbsent=true&apiKey=09325b95264143aebd92e4c7eabcc1bf"
-        alt=""
-        className="object-contain mt-4 aspect-[10.75] w-[719px] max-md:max-w-full"
-      />
+      ) : (
+        <p>Loading ESG Badge...</p>
+      )}
     </div>
   );
-}
-export default AnalysisESGRankCard;
+};
+
+export default Analysis;

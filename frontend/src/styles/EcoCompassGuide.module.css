@@ -5,7 +5,11 @@
   overflow: hidden;
   padding: 50px 30px 43px;
 }
-
+.buttonWrapper {
+  display: flex;
+  justify-content: center; /* ✅ Ensures the button is always centered */
+  margin-top: 40px; /* Adjust this value if needed */
+}
 .gtitle {
   color: rgba(0, 0, 0, 1);
   text-align: center;

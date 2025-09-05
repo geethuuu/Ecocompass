@@ -1,7 +1,7 @@
 import React from 'react';
 import { StepCard } from './StepCard';
 import styles from '../styles/EcoCompassGuide.module.css';
-
+import { Link } from "react-router-dom";
 const steps = [
   {
     title: 'Step 1: Create Your Account',
@@ -33,10 +33,16 @@ const EcoCompassGuide = () => {
             </div>
           ))}
         </div>
+
       </div>
+      <div className={styles.buttonWrapper}>
+      <Link to="/signup">
+
       <button className={styles.glearnMoreButton} tabIndex="0">
         Sign Up
       </button>
+      </Link>
+      </div>
     </div>
   );
 };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
+import ReactMarkdown from "react-markdown";
 
 function SuggestionsCard() {
   const location = useLocation();
@@ -49,15 +50,19 @@ function SuggestionsCard() {
         {loading ? "Fetching..." : "Get Suggestions"}
       </button>
 
-      <div className="mt-6">
+      <div className="mt-6 w-full">
         <h2 className="text-xl font-semibold">Improvement Suggestions:</h2>
-        <ul className="mt-2 list-disc list-inside text-gray-700">
+        <div className="mt-2 text-gray-700">
           {suggestions.length > 0 ? (
-            suggestions.map((suggestion, index) => <li key={index}>{suggestion}</li>)
+            suggestions.map((suggestion, index) => (
+              <div key={index} className="mt-4 p-3 bg-gray-100 rounded-lg">
+                <ReactMarkdown>{suggestion}</ReactMarkdown>
+              </div>
+            ))
           ) : (
-            <li>No suggestions available.</li>
+            <p>No suggestions available.</p>
           )}
-        </ul>
+        </div>
       </div>
     </div>
   );

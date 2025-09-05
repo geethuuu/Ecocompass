@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.utils.timezone import now
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, name, password=None, user_type='Company'):
@@ -39,10 +40,13 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
         return f"{self.name} ({self.email} - {self.user_type})"
     
 class ESGAnalysis(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name="esg_analysis")  
     file_name = models.CharField(max_length=255)  # File name if applicable
     esg_analysis = models.JSONField()  # Store ESG category scores as JSON
     esg_score = models.FloatField()
-    # uploaded_at = models.DateTimeField(auto_now_add=True)  # Auto timestamp
+    uploaded_at = models.DateTimeField(default=now)  # Auto timestamp
+    
 
     def __str__(self):
-        return f"{self.file_name} - ESG Analysis"
+        return f"{self.user.name} - {self.file_name} - ESG Score: {self.esg_score}"
+

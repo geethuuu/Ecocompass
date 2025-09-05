@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from '../styles/EcoCompass.module.css';
-
+import { Link } from "react-router-dom";
 export const CallToAction = () => {
   const handleGetStarted = () => {
-    window.location.href = '/onboarding';
+    window.location.href = '/stepcard';
   };
 
   return (
@@ -17,6 +17,8 @@ export const CallToAction = () => {
           benchmarked against industry standards and take the first step toward 
           driving meaningful change and showcasing your dedication to a sustainable future!
         </p>
+        <Link to="/stepcard">
+
         <button 
           className={styles.secctaButton}
           onClick={handleGetStarted}
@@ -24,6 +26,7 @@ export const CallToAction = () => {
         >
           Get started
         </button>
+        </Link>
       </div>
     </section>
   );

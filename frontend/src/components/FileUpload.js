@@ -6,7 +6,7 @@ import axios from "axios";
 const FileUpload = () => {
   const [file, setFile] = useState(null);
   const [uploading, setUploading] = useState(false);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
@@ -21,22 +21,30 @@ const FileUpload = () => {
       return;
     }
 
+    const token = localStorage.getItem("access_token"); // Get token from local storage
+    if (!token) {
+      alert("You are not authenticated. Please log in.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", file);
 
     try {
       setUploading(true);
       const response = await axios.post("http://127.0.0.1:8000/upload/", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "Authorization": `Bearer ${token}`,
+        },
       });
 
       alert("Upload successful!");
-
-      // ✅ Navigate to /fileupload and pass the response data
       navigate("/fileupload", { state: { esgData: response.data } });
 
     } catch (error) {
       alert("Upload failed!");
+      console.error("Upload error:", error.response?.data || error.message);
     } finally {
       setUploading(false);
     }

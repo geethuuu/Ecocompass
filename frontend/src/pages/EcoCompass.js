@@ -6,6 +6,7 @@ import { contentData } from '../constants/contentData';
 import LandingPage from '../components/LandingPage';
 import EcoCompassGuide from '../components/EcoCompassGuide';
 import Footer from '../components/Footer';
+import BadgeInfoSection from '../components/BadgeInfoSection';
 
 export const EcoCompass = () => {
   // Create refs for each section
@@ -80,6 +81,7 @@ export const EcoCompass = () => {
           ))}
           <CallToAction ref={callToActionRef} />
         </div>
+        <BadgeInfoSection ref={BadgeInfoSection}/>
         <EcoCompassGuide ref={ecoCompassGuideRef} />
       </div>
       <Footer ref={footerRef} />
